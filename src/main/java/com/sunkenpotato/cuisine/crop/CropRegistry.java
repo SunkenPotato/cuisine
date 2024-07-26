@@ -1,6 +1,6 @@
-package com.sunkenpotato.herbal.crop;
+package com.sunkenpotato.cuisine.crop;
 
-import com.sunkenpotato.herbal.Cuisine;
+import com.sunkenpotato.cuisine.Cuisine;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;

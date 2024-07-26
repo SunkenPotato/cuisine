@@ -1,6 +1,6 @@
-package com.sunkenpotato.herbal.villager;
+package com.sunkenpotato.cuisine.villager;
 
-import com.sunkenpotato.herbal.crop.CropRegistry;
+import com.sunkenpotato.cuisine.crop.CropRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;

@@ -1,6 +1,6 @@
-package com.sunkenpotato.herbal;
+package com.sunkenpotato.cuisine;
 
-import com.sunkenpotato.herbal.crop.CropRegistry;
+import com.sunkenpotato.cuisine.crop.CropRegistry;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.minecraft.client.render.RenderLayer;

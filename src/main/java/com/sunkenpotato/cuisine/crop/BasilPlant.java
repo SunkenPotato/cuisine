@@ -1,4 +1,4 @@
-package com.sunkenpotato.herbal.crop;
+package com.sunkenpotato.cuisine.crop;
 
 import net.minecraft.block.*;
 import net.minecraft.entity.Entity;

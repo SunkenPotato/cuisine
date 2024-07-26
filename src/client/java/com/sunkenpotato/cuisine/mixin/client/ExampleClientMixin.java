@@ -1,4 +1,4 @@
-package com.sunkenpotato.herbal.mixin.client;
+package com.sunkenpotato.cuisine.mixin.client;
 
 import net.minecraft.client.MinecraftClient;
 import org.spongepowered.asm.mixin.Mixin;

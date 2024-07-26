@@ -1,9 +1,9 @@
 {
 	"required": true,
-	"package": "com.sunkenpotato.herbal.mixin.client",
+	"package": "com.sunkenpotato.cuisine.mixin",
 	"compatibilityLevel": "JAVA_21",
-	"client": [
-		"ExampleClientMixin"
+	"mixins": [
+		"ExampleMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

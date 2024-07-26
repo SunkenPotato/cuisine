@@ -1,7 +1,7 @@
-package com.sunkenpotato.herbal;
+package com.sunkenpotato.cuisine;
 
-import com.sunkenpotato.herbal.crop.CropRegistry;
-import com.sunkenpotato.herbal.villager.FarmerTradeInjects;
+import com.sunkenpotato.cuisine.crop.CropRegistry;
+import com.sunkenpotato.cuisine.villager.FarmerTradeInjects;
 import net.fabricmc.api.ModInitializer;
 
 import org.slf4j.Logger;

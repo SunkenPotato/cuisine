@@ -1,32 +1,32 @@
 {
 	"schemaVersion": 1,
-	"id": "herbal",
+	"id": "cuisine",
 	"version": "${version}",
-	"name": "Herbal",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"name": "Cuisine",
+	"description": "A mod to expand the culinary range in Minecraft.",
 	"authors": [
 		"Me!"
 	],
 	"contact": {
 		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"sources": "https://github.com/SunkenPotato/cuisine"
 	},
 	"license": "CC0-1.0",
-	"icon": "assets/herbal/icon.png",
+	"icon": "assets/cuisine/icon.png",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-          "com.sunkenpotato.herbal.Cuisine"
+          "com.sunkenpotato.cuisine.Cuisine"
 		],
 		"client": [
-			"com.sunkenpotato.herbal.HerbalClient"
+			"com.sunkenpotato.cuisine.HerbalClient"
 		],
 		"fabric-datagen": [
-			"com.sunkenpotato.herbal.HerbalDataGenerator"
+			"com.sunkenpotato.cuisine.CuisineDataGenerator"
 		]
 	},
 	"mixins": [
-		"herbal.mixins.json",
+		"cuisine.mixins.json",
 		{
 			"config": "herbal.client.mixins.json",
 			"environment": "client"
