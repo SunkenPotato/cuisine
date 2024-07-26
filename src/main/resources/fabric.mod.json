@@ -28,7 +28,7 @@
 	"mixins": [
 		"cuisine.mixins.json",
 		{
-			"config": "herbal.client.mixins.json",
+			"config": "cuisine.client.mixins.json",
 			"environment": "client"
 		}
 	],
@@ -40,5 +40,6 @@
 	},
 	"suggests": {
 		"another-mod": "*"
-	}
+	},
+	"accessWidener": "cuisine.accesswidener"
 }

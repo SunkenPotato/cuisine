@@ -1,6 +1,6 @@
 {
   "parent": "block/cross",
   "textures": {
-    "cross": "cuisine:block/rosemary_crop_4"
+    "cross": "cuisine:block/basil_crop_2"
   }
 }

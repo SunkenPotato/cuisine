@@ -10,6 +10,7 @@ import net.minecraft.village.TradeOffer;
 import net.minecraft.village.TradeOffers;
 import net.minecraft.village.TradedItem;
 import net.minecraft.village.VillagerProfession;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class FarmerTradeInjects {
@@ -17,6 +18,7 @@ public class FarmerTradeInjects {
     public static void registerTrades() {
         TradeOfferHelper.registerVillagerOffers(VillagerProfession.FARMER, 1, factories -> {
             factories.add(new RosemaryOffer());
+            factories.add(new BasilOffer());
         });
     }
 
@@ -28,8 +30,17 @@ public class FarmerTradeInjects {
             ItemStack rosemaryStack = new ItemStack(CropRegistry.ROSEMARY, 5);
             TradedItem emeraldStack = new TradedItem(Items.EMERALD, 1);
 
-
             return new TradeOffer(emeraldStack, rosemaryStack, 20, 1, 1);
+        }
+    }
+
+    public static final class BasilOffer implements TradeOffers.Factory {
+        @Override
+        public @NotNull TradeOffer create(Entity entity, Random random) {
+            ItemStack basilStack = new ItemStack(CropRegistry.BASIL, 5);
+            TradedItem emeraldStack = new TradedItem(Items.EMERALD, 1);
+
+            return new TradeOffer(emeraldStack, basilStack, 20, random.nextInt(2), 1);
         }
     }
 

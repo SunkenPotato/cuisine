@@ -42,7 +42,7 @@ public class BasilPlant extends SweetBerryBushBlock implements Fertilizable {
         if (!mature) {
             return ActionResult.PASS;
         }
-        int randomStackCount = 1 + world.random.nextInt(2);
+        int randomStackCount = 1 + world.random.nextInt(5);
         dropStack(world, pos, new ItemStack(CropRegistry.BASIL, randomStackCount + 1));
 
         world.playSound(null, pos, SoundEvents.BLOCK_SWEET_BERRY_BUSH_PICK_BERRIES, SoundCategory.BLOCKS, 1.0F, 0.8F + world.random.nextFloat() * 0.4F);

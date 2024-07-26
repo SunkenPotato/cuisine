@@ -11,9 +11,6 @@
     },
     "age=3": {
       "model": "cuisine:block/rosemary_crop_3"
-    },
-    "age=4": {
-      "model": "cuisine:block/rosemary_crop_4"
     }
   }
 }
