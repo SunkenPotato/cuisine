@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "cuisine:salt_ore",
+    "cuisine:salt_block"
+  ]
+}

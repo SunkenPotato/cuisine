@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_salt_stone": {
+      "conditions": {
+        "items": [
+          {
+            "items": "cuisine:salt_stone"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "cuisine:salt_block"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_salt_stone"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "cuisine:salt_block"
+    ]
+  }
+}

@@ -36,7 +36,7 @@ public class CropRegistry {
     public static final Item BASIL = registerItem("basil", new BasicSeedItem(BASIL_BUSH, DEFAULT_SETTINGS));
 
     @SuppressWarnings("unused")
-    private static Block registerBlock(String name, Block block) {
+    public static Block registerBlock(String name, Block block) {
         registerBlockItem(name, block);
         return Registry.register(Registries.BLOCK, Identifier.of(Cuisine.MOD_ID, name), block);
     }

@@ -1,4 +1,11 @@
 {
   "item.cuisine.rosemary": "Rosemary",
-  "item.cuisine.basil": "Basil"
+  "item.cuisine.basil": "Basil",
+  "item.cuisine.salt_stone": "Salt Stone",
+  "item.cuisine.ground_salt": "Ground Salt",
+
+  "block.cuisine.salt_ore": "Salt Ore",
+  "block.cuisine.salt_block": "Salt Block",
+
+  "entity.minecraft.villager.chef": "Chef"
 }
