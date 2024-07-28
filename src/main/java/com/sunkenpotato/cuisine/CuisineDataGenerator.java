@@ -14,6 +14,7 @@ import net.minecraft.data.client.ModelProvider;
 import net.minecraft.data.server.recipe.RecipeExporter;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.data.server.tag.TagProvider;
+import net.minecraft.item.Items;
 import net.minecraft.loot.provider.number.BinomialLootNumberProvider;
 import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
 import net.minecraft.loot.provider.number.UniformLootNumberProvider;
@@ -66,6 +67,12 @@ public class CuisineDataGenerator implements DataGeneratorEntrypoint {
 			ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, BlockRegistry.SALT_BLOCK).pattern("###").pattern("###").pattern("###")
 					.input('#', ItemRegistry.SALT_STONE)
 					.criterion(hasItem(ItemRegistry.SALT_STONE), conditionsFromItem(ItemRegistry.SALT_STONE))
+					.offerTo(exporter);
+
+			ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, BlockRegistry.POT_BLOCK).pattern("iii").pattern("i i").pattern("n n")
+					.input('i', Items.IRON_INGOT)
+					.input('n', Items.IRON_NUGGET)
+					.criterion(hasItem(Items.IRON_INGOT), conditionsFromItem(Items.IRON_INGOT))
 					.offerTo(exporter);
 		}
 	}

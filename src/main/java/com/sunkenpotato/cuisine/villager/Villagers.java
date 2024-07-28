@@ -17,7 +17,8 @@ import net.minecraft.world.poi.PointOfInterestType;
 public class Villagers {
 
     public static final RegistryKey<PointOfInterestType> CHEF_POI_KEY = poiKey("chefpoi");
-    public static final PointOfInterestType CHEF_POI = registerPOI("chefpoi", BlockRegistry.PLACEHOLDER_BLOCK);
+    public static final PointOfInterestType CHEF_POI = registerPOI("chefpoi", BlockRegistry.POT_BLOCK);
+
 
     public static final VillagerProfession CHEF = registerProfession("chef", CHEF_POI_KEY);
 

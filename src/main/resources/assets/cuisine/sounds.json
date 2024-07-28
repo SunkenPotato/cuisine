@@ -1,0 +1,8 @@
+{
+  "finish_cooking": {
+    "subtitle": "sounds.cuisine.cooking",
+    "sounds": [
+      "cuisine:finish_cooking"
+    ]
+  }
+}

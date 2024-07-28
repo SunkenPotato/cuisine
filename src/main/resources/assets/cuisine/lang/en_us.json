@@ -6,6 +6,11 @@
 
   "block.cuisine.salt_ore": "Salt Ore",
   "block.cuisine.salt_block": "Salt Block",
+  "block.cuisine.pot_block": "Pot",
+
+  "translation.cuisine.pot": "Pot",
+
+  "sounds.cuisine.finish_cooking": "Cooking",
 
   "entity.minecraft.villager.chef": "Chef"
 }

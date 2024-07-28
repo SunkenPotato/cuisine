@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "": { "model": "cuisine:block/pot_block" }
+  }
+}

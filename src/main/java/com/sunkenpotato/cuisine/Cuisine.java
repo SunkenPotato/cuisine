@@ -4,6 +4,8 @@ import com.sunkenpotato.cuisine.block.BlockRegistry;
 import com.sunkenpotato.cuisine.crop.CropRegistry;
 import com.sunkenpotato.cuisine.gen.OreGeneration;
 import com.sunkenpotato.cuisine.item.ItemRegistry;
+import com.sunkenpotato.cuisine.recipe.RecipeRegistry;
+import com.sunkenpotato.cuisine.sound.CuisineSounds;
 import com.sunkenpotato.cuisine.villager.ChefTradeInjects;
 import com.sunkenpotato.cuisine.villager.FarmerTradeInjects;
 import com.sunkenpotato.cuisine.villager.Villagers;
@@ -21,6 +23,7 @@ public class Cuisine implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
+		RecipeRegistry.registerRecipes();
 		CropRegistry.initialize();
 		BlockRegistry.initialize();
 		ItemRegistry.initialize();
@@ -28,7 +31,7 @@ public class Cuisine implements ModInitializer {
 		Villagers.registerVillagers();
 		ChefTradeInjects.registerTrades();
 		FarmerTradeInjects.registerTrades();
-
+		CuisineSounds.registerSounds();
 		// This code runs as soon as Minecraft is in a mod-load-ready state.
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.

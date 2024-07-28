@@ -1,0 +1,12 @@
+{
+  "type": "cuisine:cooking",
+  "ingredients": [
+    {
+      "item": "minecraft:beef"
+    }
+  ],
+  "result": {
+    "item": "minecraft:cooked_beef",
+    "count": 1
+  }
+}
