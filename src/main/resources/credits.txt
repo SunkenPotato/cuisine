@@ -1,0 +1,7 @@
+EsromeTheStrange - Codec Recipe Serializing help
+ryankshah - Codec Recipe Serializing help
+dicedpixels - various
+MrSterner - Custom recipe type
+.7410 - Custom recipe type (ID)
+katanya04 - Pot fluid rendering (****)
+major major major - great mod ideas & essay: art and politics

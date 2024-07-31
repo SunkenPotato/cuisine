@@ -1,5 +1,6 @@
 package com.sunkenpotato.cuisine.recipe;
 
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -7,23 +8,26 @@ import com.sunkenpotato.cuisine.Cuisine;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.recipe.*;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 
 import java.util.List;
+import static com.sunkenpotato.cuisine.util.DefaultedListUtil.listWithoutEmpty;
 
 
 public class PotRecipe implements Recipe<PotRecipeInput> {
 
     public final ItemStack output;
     private final DefaultedList<Ingredient> ingredients;
-    // TODO private final Ingredient base;
+    private final Base base;
 
-    public PotRecipe(List<Ingredient> ingredients, ItemStack is) {
+    public PotRecipe(List<Ingredient> ingredients, ItemStack is, String baseString) {
         this.output = is;
         this.ingredients = (DefaultedList<Ingredient>) ingredients;
+        this.base = Base.valueOf(baseString.toUpperCase());
     }
 
     @Override
@@ -31,7 +35,15 @@ public class PotRecipe implements Recipe<PotRecipeInput> {
 
         if (world.isClient()) return false;
 
-        return true;
+        if (listWithoutEmpty(input.input).size() != this.ingredients.size()) {
+            return false;
+        } else {
+            return input.getSize() == 1 && this.ingredients.size() == 1 ? this.ingredients.getFirst().test(input.getStackInSlot(0)) : input.getMatcher().match(this, null) && base.equals(input.base);
+        }
+    }
+
+    public String getBase() {
+        return base.toString();
     }
 
     @Override
@@ -84,7 +96,7 @@ public class PotRecipe implements Recipe<PotRecipeInput> {
         public static final Serializer INSTANCE = new Serializer();
         public static final String ID = "cooking";
 
-        private static final MapCodec<PotRecipe> CODEC = RecordCodecBuilder.mapCodec( instance -> instance.group( (Ingredient.DISALLOW_EMPTY_CODEC.listOf().fieldOf("ingredients")).flatXmap(ingredients -> {
+        private static final MapCodec<PotRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group( (Ingredient.DISALLOW_EMPTY_CODEC.listOf().fieldOf("ingredients")).flatXmap(ingredients -> {
             Ingredient[] ingredients2 = ingredients.stream().filter(ingredient -> !ingredient.isEmpty()).toArray(Ingredient[]::new);
             if (ingredients2.length == 0) {
                 return DataResult.error(() -> "No ingredients for shapeless recipe");
@@ -94,7 +106,8 @@ public class PotRecipe implements Recipe<PotRecipeInput> {
             }
             return DataResult.success(DefaultedList.copyOf(Ingredient.EMPTY, ingredients2));
 
-        }, DataResult::success).forGetter(PotRecipe::getIngredients),(ItemStack.VALIDATED_CODEC.fieldOf("result")).forGetter(recipe -> recipe.output)).apply(instance, PotRecipe::new));
+        }, DataResult::success).forGetter(PotRecipe::getIngredients),(ItemStack.VALIDATED_CODEC.fieldOf("result")).forGetter(recipe -> recipe.output),
+                Codec.STRING.fieldOf("base").forGetter(recipe -> recipe.base.toString().toLowerCase())).apply(instance, PotRecipe::new));
 
         private static final PacketCodec<RegistryByteBuf, PotRecipe> PACKET_CODEC = PacketCodec.ofStatic(Serializer::write, Serializer::read);
 
@@ -106,10 +119,11 @@ public class PotRecipe implements Recipe<PotRecipeInput> {
             }
 
             ItemStack itemStack = ItemStack.PACKET_CODEC.decode(registryByteBuf);
+            String baseString = PacketCodecs.STRING.decode(registryByteBuf);
 
-            Cuisine.LOGGER.info("read recipe: " + itemStack);
+            Cuisine.LOGGER.info("read recipe: {}", itemStack);
 
-            return new PotRecipe(inputs, itemStack);
+            return new PotRecipe(inputs, itemStack, baseString);
         }
 
         private static void write(RegistryByteBuf registryByteBuf, PotRecipe potRecipe) {
@@ -120,6 +134,8 @@ public class PotRecipe implements Recipe<PotRecipeInput> {
             }
 
             ItemStack.PACKET_CODEC.encode(registryByteBuf, potRecipe.getResult(null));
+            PacketCodecs.STRING.encode(registryByteBuf, potRecipe.getBase());
+
             Cuisine.LOGGER.info("wrote recipe");
         }
 

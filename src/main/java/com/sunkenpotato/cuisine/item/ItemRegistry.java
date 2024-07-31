@@ -2,6 +2,7 @@ package com.sunkenpotato.cuisine.item;
 
 import com.sunkenpotato.cuisine.Cuisine;
 import com.sunkenpotato.cuisine.block.BlockRegistry;
+import com.sunkenpotato.cuisine.util.RegistryClass;
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -9,6 +10,7 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 
+@RegistryClass
 public class ItemRegistry {
 
     public static final Item SALT_STONE = Registry.register(Registries.ITEM, Identifier.of(Cuisine.MOD_ID, "salt_stone"), new Item(new Item.Settings()));

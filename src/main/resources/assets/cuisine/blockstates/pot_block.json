@@ -1,5 +1,7 @@
 {
   "variants": {
-    "": { "model": "cuisine:block/pot_block" }
+    "contents=0": { "model": "cuisine:block/pot_block_water"},
+    "contents=1": { "model": "cuisine:block/pot_block_oil"},
+    "contents=2": { "model": "cuisine:block/pot_block"}
   }
 }

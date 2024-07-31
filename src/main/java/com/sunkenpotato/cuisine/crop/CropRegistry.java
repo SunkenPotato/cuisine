@@ -1,6 +1,7 @@
 package com.sunkenpotato.cuisine.crop;
 
 import com.sunkenpotato.cuisine.Cuisine;
+import com.sunkenpotato.cuisine.util.RegistryClass;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -11,7 +12,7 @@ import net.minecraft.registry.Registry;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
 
-
+@RegistryClass
 public class CropRegistry {
 
     public static final AbstractBlock.Settings BUSH_SETTINGS = AbstractBlock.Settings.copy(Blocks.SWEET_BERRY_BUSH)

@@ -1,58 +1,85 @@
 package com.sunkenpotato.cuisine.block;
 
 import com.sunkenpotato.cuisine.Cuisine;
+import com.sunkenpotato.cuisine.recipe.Base;
 import com.sunkenpotato.cuisine.recipe.PotRecipe;
 import com.sunkenpotato.cuisine.recipe.PotRecipeInput;
 import com.sunkenpotato.cuisine.sound.CuisineSounds;
+import com.sunkenpotato.cuisine.util.BaseUtil;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.CampfireBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.Inventories;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.dedicated.command.StopCommand;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
+import net.minecraft.state.property.IntProperty;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.ItemActionResult;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
+/**
+ * BlockEntity for Pot
+ * //TODO// cleanup
+ * @see com.sunkenpotato.cuisine.block.PotBlock
+ */
+@SuppressWarnings("DataFlowIssue")
 public class PotBlockEntity extends BlockEntity {
 
-    private final int maxSize = 7;
-    DefaultedList<ItemStack> inventory = DefaultedList.ofSize(maxSize, ItemStack.EMPTY);
+    public final Random random;
+    public final List<Float> randomValues = new ArrayList<>();
 
+    private final int maxSize = 7;
+    public final int maxCookingTime = 4 * 20;
+    public int cookingDelta = 0;
+
+    public DefaultedList<ItemStack> inventory = DefaultedList.ofSize(maxSize, ItemStack.EMPTY);
+    public IntProperty stateContents = PotBlock.CONTENTS;
+    public Base base = Base.NULL;
+    private boolean isCooking = false;
 
     public PotBlockEntity(BlockPos pos, BlockState state) {
         super(BlockRegistry.POT_BLOCK_ENTITY_T, pos, state);
+        random = new Random(pos.hashCode());
+
+        // Initialize randomValues for the BlockEntityRenderer
+        int k = 0;
+        while (k <= maxSize) {
+            randomValues.add(random.nextFloat(0, 1));
+            k++;
+        }
     }
 
     @Override
     public void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup wrapper) {
-        NbtList nbtList = new NbtList();
-        for (ItemStack stack : inventory) {
-            ItemStack.CODEC.encodeStart(NbtOps.INSTANCE, stack).result().ifPresent(nbtList::add);
-        }
+        Inventories.writeNbt(nbt, this.inventory, wrapper);
+        nbt.putString("Base", base.name());
 
-        nbt.put("Inventory", nbtList);
+        super.writeNbt(nbt, wrapper);
     }
 
     @Override
     public void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup wrapper) {
-        NbtList nbtInventory = nbt.getList("Inventory", NbtElement.COMPOUND_TYPE);
-
-        for (int i = 0; i < nbtInventory.size(); i++) {
-            ItemStack.CODEC.decode(NbtOps.INSTANCE, nbtInventory.getCompound(i)).result().ifPresent(itemStack -> inventory.set(0, itemStack.getFirst()));
-        }
+        super.readNbt(nbt, wrapper);
+        this.inventory = DefaultedList.ofSize(maxSize, ItemStack.EMPTY);
+        base = Base.valueOf(nbt.getString("Base").toUpperCase());
+        Inventories.readNbt(nbt, this.inventory, wrapper);
 
     }
 
@@ -64,13 +91,24 @@ public class PotBlockEntity extends BlockEntity {
         }
     }
 
-    public boolean tryAddElement(ItemStack stack) {
+    public boolean tryAddElement(ItemStack stack, BlockState state, World world, BlockPos pos) {
         if (isDefaultedListFull(inventory)) {
-            Cuisine.LOGGER.info("INVENTORY FULL");
             return false;
         }
 
         ItemStack copy = new ItemStack(stack.getItem(), 1);
+
+        boolean isOfBase = BaseUtil.isItemOfBase(copy);
+
+        if (base == Base.NULL && isOfBase) {
+            base = BaseUtil.getBaseFromItem(copy);
+
+            BlockState newState = state.with(stateContents, BaseUtil.baseToInt(base));
+            world.setBlockState(pos, newState);
+
+
+            return true;
+        }
 
         for (int i = 0; i < inventory.size(); i++) {
             if (inventory.get(i).isEmpty()) {
@@ -79,21 +117,38 @@ public class PotBlockEntity extends BlockEntity {
             }
         }
 
-        if (hasRecipe()) craftItem(world, pos);
-
         return true;
+    }
+
+    public void beginCookingProcess() {
+        isCooking = true;
+    }
+
+    public void endCookingProcess() {
+        isCooking = false;
+        cookingDelta = 0;
+    }
+
+    public boolean isCooking() {
+        return isCooking;
+    }
+
+    private boolean isHeated() {
+        return getBlockUnderneath() instanceof CampfireBlock;
+    }
+
+    private Block getBlockUnderneath() {
+        BlockPos pos = new BlockPos(getPos().getX(), getPos().getY() - 1, getPos().getZ());
+        Cuisine.LOGGER.info("{}", pos);
+        return world.getBlockState(pos).getBlock();
     }
 
     public void craftItem(World world, BlockPos pos) {
         Optional<RecipeEntry<PotRecipe>> recipe = getCurrentRecipe();
 
-        double x = pos.getX();
-        double y = pos.getY();
-        double z = pos.getZ();
-
-        world.playSound(null, x, y, z, CuisineSounds.FINISH_COOKING, SoundCategory.MUSIC, 1f, 1f);
-
         dropItem(world, pos, recipe.get().value().output);
+
+        inventory.clear();
     }
 
     private void dropItem(World world, BlockPos pos, ItemStack stack) {
@@ -110,31 +165,19 @@ public class PotBlockEntity extends BlockEntity {
     private boolean hasRecipe() {
         Optional<RecipeEntry<PotRecipe>> recipe = getCurrentRecipe();
 
-        Cuisine.LOGGER.info("Has recipe: {}", recipe.isPresent());
-
         return recipe.isPresent();
     }
 
     private Optional<RecipeEntry<PotRecipe>> getCurrentRecipe() {
         PotRecipeInput PRI;
-        DefaultedList<Ingredient> tempList = DefaultedList.ofSize(inventory.size(), Ingredient.EMPTY);
+        DefaultedList<ItemStack> tempList = DefaultedList.ofSize(inventory.size(), ItemStack.EMPTY);
         for (int i = 0; i < inventory.size(); i++) {
-            tempList.set(i, Ingredient.ofStacks(inventory.get(i)));
+            tempList.set(i, inventory.get(i));
         }
 
-         PRI = new PotRecipeInput(tempList);
-
-
-        Cuisine.LOGGER.info("Possible entries: {}", getWorld().getRecipeManager().listAllOfType(    PotRecipe.PotRecipeType.INSTANCE));
+        PRI = new PotRecipeInput(tempList, base);
 
         return getWorld().getRecipeManager().getFirstMatch(PotRecipe.PotRecipeType.INSTANCE, PRI, getWorld());
-    }
-
-    private boolean isDefaultedListEmpty(DefaultedList<ItemStack> defaultedList) {
-        int k = 0;
-        for (ItemStack stack : defaultedList) if (stack.isEmpty()) k++;
-
-        return k == defaultedList.size();
     }
 
     private boolean isDefaultedListFull(DefaultedList<ItemStack> defaultedList) {
@@ -144,24 +187,52 @@ public class PotBlockEntity extends BlockEntity {
         return k == 0;
     }
 
-    public ActionResult tryEmptyInventory(PlayerEntity player) {
+    public ItemActionResult tryEmptyInventory() {
         int k = 0;
         for (ItemStack stack : inventory) {
             if (stack.isEmpty()) k++;
         }
 
         if (k == maxSize) {
-            return ActionResult.PASS;
+            return ItemActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         } else {
-            emptyInventory(player);
-            return ActionResult.SUCCESS;
+            emptyInventory();
+            return ItemActionResult.SUCCESS;
         }
     }
 
-    private void emptyInventory(PlayerEntity player) {
+    private void emptyInventory() {
         for (ItemStack stack : inventory) {
-            stack = ItemStack.EMPTY;
-            player.giveItemStack(stack);
+            dropItem(world, pos, stack);
+        }
+        inventory.clear();
+    }
+
+    public void updateState(BlockState state) {
+        switch (state.get(stateContents)) {
+            case 0 -> base = Base.WATER;
+            case 1 -> base = Base.OIL;
+            case 2 -> base = Base.NULL;
+        }
+    }
+
+    public static void tick(World world, BlockPos pos, BlockState state, PotBlockEntity blockEntity) {
+
+        if (blockEntity.hasRecipe() && blockEntity.isHeated()) {
+            blockEntity.beginCookingProcess();
+        }
+
+        if (blockEntity.isCooking()) {
+            if (blockEntity.cookingDelta == blockEntity.maxCookingTime) {
+                blockEntity.endCookingProcess();
+                blockEntity.craftItem(world, pos);
+            } else if (blockEntity.cookingDelta == 0) {
+                world.playSound(null, pos, CuisineSounds.FINISH_COOKING, SoundCategory.MASTER, 1f, 1f);
+                blockEntity.cookingDelta++;
+            }
+            else {
+                blockEntity.cookingDelta ++;
+            }
         }
     }
 
