@@ -10,17 +10,26 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 
+@SuppressWarnings("unused")
 @RegistryClass
 public class ItemRegistry {
 
-    public static final Item SALT_STONE = Registry.register(Registries.ITEM, Identifier.of(Cuisine.MOD_ID, "salt_stone"), new Item(new Item.Settings()));
-    public static final Item GROUND_SALT = Registry.register(Registries.ITEM, Identifier.of(Cuisine.MOD_ID, "ground_salt"), new Item(new Item.Settings()));
-    public static final BlockItem SALT_ORE_ITEM = Registry.register(Registries.ITEM, Identifier.of(Cuisine.MOD_ID, "salt_ore"), new BlockItem(BlockRegistry.SALT_ORE, new Item.Settings()));
-    public static final BlockItem SALT_BLOCK_ITEM = Registry.register(Registries.ITEM, Identifier.of(Cuisine.MOD_ID, "salt_block"), new BlockItem(BlockRegistry.SALT_BLOCK, new Item.Settings()));
-    public static final BlockItem POT_BLOCK_ITEM = Registry.register(Registries.ITEM, Identifier.of(Cuisine.MOD_ID, "pot_block"), new BlockItem(BlockRegistry.POT_BLOCK, new Item.Settings()));
-    public static final BlockItem OLIVE_LEAVES_ITEM = Registry.register(Registries.ITEM, Identifier.of(Cuisine.MOD_ID, "olive_leaves"), new BlockItem(BlockRegistry.OLIVE_LEAVES, new Item.Settings()));
-    public static final BlockItem OLIVE_LOG_ITEM = Registry.register(Registries.ITEM, Identifier.of(Cuisine.MOD_ID, "olive_log"), new BlockItem(BlockRegistry.OLIVE_LOG, new Item.Settings()));
+    public static final Item SALT_STONE = register(new Item(new Item.Settings()), "salt_stone");
+    public static final Item GROUND_SALT = register(new Item(new Item.Settings()), "ground_salt");
+    public static final BlockItem SALT_ORE_ITEM = register(new BlockItem(BlockRegistry.SALT_ORE, new Item.Settings()), "salt_ore");
+    public static final BlockItem SALT_BLOCK_ITEM = register(new BlockItem(BlockRegistry.SALT_BLOCK, new Item.Settings()), "salt_block");
+    public static final BlockItem POT_BLOCK_ITEM = register(new BlockItem(BlockRegistry.POT_BLOCK, new Item.Settings()), "pot");
+    public static final BlockItem OLIVE_LEAVES_ITEM = register(new BlockItem(BlockRegistry.OLIVE_LEAVES, new Item.Settings()), "olive_leaves");
+    public static final BlockItem OLIVE_LOG_ITEM = register(new BlockItem(BlockRegistry.OLIVE_LOG, new Item.Settings()), "olive_log");
 
+
+    public static Item register(Item item, String name) {
+        return Registry.register(Registries.ITEM, Identifier.of(Cuisine.MOD_ID, name), item);
+    }
+
+    public static BlockItem register(BlockItem item, String name) {
+        return Registry.register(Registries.ITEM, Identifier.of(Cuisine.MOD_ID, name), item);
+    }
 
     public static void initialize() {
 
