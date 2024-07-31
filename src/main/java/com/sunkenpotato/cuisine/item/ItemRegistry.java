@@ -18,8 +18,6 @@ public class ItemRegistry {
     public static final BlockItem SALT_ORE_ITEM = Registry.register(Registries.ITEM, Identifier.of(Cuisine.MOD_ID, "salt_ore"), new BlockItem(BlockRegistry.SALT_ORE, new Item.Settings()));
     public static final BlockItem SALT_BLOCK_ITEM = Registry.register(Registries.ITEM, Identifier.of(Cuisine.MOD_ID, "salt_block"), new BlockItem(BlockRegistry.SALT_BLOCK, new Item.Settings()));
     public static final BlockItem POT_BLOCK_ITEM = Registry.register(Registries.ITEM, Identifier.of(Cuisine.MOD_ID, "pot_block"), new BlockItem(BlockRegistry.POT_BLOCK, new Item.Settings()));
-    public static final BlockItem OLIVE_LEAVES_ITEM = Registry.register(Registries.ITEM, Identifier.of(Cuisine.MOD_ID, "olive_leaves"), new BlockItem(BlockRegistry.OLIVE_LEAVES, new Item.Settings()));
-    public static final BlockItem OLIVE_LOG_ITEM = Registry.register(Registries.ITEM, Identifier.of(Cuisine.MOD_ID, "olive_log"), new BlockItem(BlockRegistry.OLIVE_LOG, new Item.Settings()));
 
 
     public static void initialize() {
