@@ -19,15 +19,11 @@ public class HerbalClient implements ClientModInitializer {
 
 		BlockEntityRendererFactories.register(BlockRegistry.POT_BLOCK_ENTITY_T, PotBlockEntityRenderer::new);
 
-		BlockColorProvider provider = (state, world, pos, tintIndex) -> {
-			switch (tintIndex) {
-				case 1:
-					return 0xfffceeac;
-				case 0:
-					return 0xff3477eb;
-				default: return 0x000000;
-			}
-		};
+		BlockColorProvider provider = (state, world, pos, tintIndex) -> switch (tintIndex) {
+            case 1 -> 0xfffceeac;
+            case 0 -> 0xff3477eb;
+            default -> 0x000000;
+        };
 
 		BlockRenderLayerMap.INSTANCE.putBlock(BlockRegistry.POT_BLOCK, RenderLayer.getTranslucent());
 
